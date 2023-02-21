@@ -5,7 +5,7 @@
 import * as React from 'react';
 import 'react-native';
 import Home from '../src/screens/Home';
-import {render} from '@testing-library/react-native';
+import {render, screen} from '@testing-library/react-native';
 
 jest.mock('@react-navigation/native', () => {
   const actualNav = jest.requireActual('@react-navigation/native');
@@ -19,8 +19,14 @@ jest.mock('@react-navigation/native', () => {
 });
 
 describe('<Home/>', () => {
-  it('render Home', () => {
+  test('render Home', () => {
     const component = render(<Home />);
     expect(component).toBeDefined();
+  });
+
+  test('render product', async () => {
+    render(<Home />);
+    const product = await screen.findAllByTestId('product-item');
+    expect(product).toBeDefined();
   });
 });
