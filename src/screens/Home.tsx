@@ -1,27 +1,18 @@
 /* eslint-disable react-native/no-inline-styles */
-import {useNavigation} from '@react-navigation/native';
 import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {
   View,
   Text,
   SafeAreaView,
-  Image,
-  ScrollView,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import {Product} from '../types/Product';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-
-type StackParamList = {
-  ProductDetail: {item: Product} | undefined;
-};
-
-type NavigationProps = NativeStackNavigationProp<StackParamList>;
+import Item from '../components/Item';
 
 export default function Home() {
   const textSpanish = require('../assets/textSpanish.json');
-  const navigation = useNavigation<NavigationProps>();
   const [points, setPoints] = useState(0);
   const [products, setProducts] = useState<Array<Product>>([]);
   const [originalData, setOriginalData] = useState([]);
@@ -130,74 +121,20 @@ export default function Home() {
           }}>
           TUS MOVIMIENTOS
         </Text>
-        <ScrollView
+        <View
           style={{
             backgroundColor: 'white',
             margin: 15,
-            paddingVertical: 25,
+            paddingVertical: 15,
             paddingHorizontal: 10,
             borderRadius: 15,
-            height: '40%',
+            height: '55%',
           }}>
-          {products.map(item => {
-            return (
-              <TouchableOpacity
-                testID="product-item"
-                onPress={() => {
-                  navigation.navigate('ProductDetail', {item});
-                }}
-                key={item.id}
-                style={{
-                  flexDirection: 'row',
-                  marginBottom: 10,
-                  justifyContent: 'space-around',
-                }}>
-                <Image
-                  source={{
-                    uri: item.image,
-                  }}
-                  style={{height: 55, width: 55, borderRadius: 10}}
-                />
-                <View
-                  style={{
-                    marginLeft: 11,
-                    justifyContent: 'space-evenly',
-                    width: 180,
-                  }}>
-                  <Text style={{fontWeight: 'bold', fontSize: 16}}>
-                    {item.product}
-                  </Text>
-                  <Text style={{fontWeight: '300'}}>
-                    {new Date(item.createdAt).toLocaleDateString(undefined, {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </Text>
-                </View>
-                <View style={{alignItems: 'center', flexDirection: 'row'}}>
-                  <View style={{flexDirection: 'row'}}>
-                    {item.is_redemption ? (
-                      <Text style={{fontWeight: 'bold', color: '#FF0000'}}>
-                        -
-                      </Text>
-                    ) : (
-                      <Text style={{fontWeight: 'bold', color: '#00B833'}}>
-                        +
-                      </Text>
-                    )}
-                    <Text style={{fontWeight: 'bold'}}> {item.points}</Text>
-                  </View>
-                  <Text
-                    style={{fontSize: 17, fontWeight: 'bold', marginLeft: 10}}>
-                    {'>'}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            );
-          })}
-          <View style={{height: 30}} />
-        </ScrollView>
+          <FlatList
+            data={products}
+            renderItem={({item}) => <Item item={item} />}
+          />
+        </View>
         <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
           {filterOn ? (
             <TouchableOpacity
